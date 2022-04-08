@@ -13,6 +13,8 @@ dotenv.config();
 connectDB();
 const app = express();
 
+const PORT = process.env.PORT;
+
 const privateKey = fs.readFileSync(
   "/etc/letsencrypt/live/chatapp.savan.tk/privkey.pem",
   "utf8"
@@ -70,8 +72,6 @@ if (process.env.NODE_ENV === "production") {
 // Error Handling middlewares
 app.use(notFound);
 app.use(errorHandler);
-
-const PORT = process.env.PORT;
 
 const server = httpsServer.listen(
   PORT,
