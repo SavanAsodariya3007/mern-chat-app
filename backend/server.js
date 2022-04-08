@@ -13,8 +13,6 @@ dotenv.config();
 connectDB();
 const app = express();
 
-const PORT = process.env.PORT;
-
 const privateKey = fs.readFileSync(
   "/etc/letsencrypt/live/chatapp.savan.tk/privkey.pem",
   "utf8"
@@ -34,12 +32,7 @@ const credentials = {
   ca: ca,
 };
 
-const httpsServer = https
-  .createServer(credentials, app)
-  .listen(
-    PORT,
-    console.log(`https Server running on PORT ${PORT}...`.yellow.bold)
-  );
+const httpsServer = https.createServer(credentials, app);
 
 app.use(express.json()); // to accept json data
 
@@ -72,6 +65,8 @@ if (process.env.NODE_ENV === "production") {
 // Error Handling middlewares
 app.use(notFound);
 app.use(errorHandler);
+
+const PORT = process.env.PORT;
 
 const server = httpsServer.listen(
   PORT,
