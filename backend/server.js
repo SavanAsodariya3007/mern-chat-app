@@ -1,3 +1,4 @@
+const fs = require("fs");
 const express = require("express");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
@@ -10,6 +11,32 @@ const path = require("path");
 dotenv.config();
 connectDB();
 const app = express();
+
+const privateKey = fs.readFileSync(
+  "/etc/letsencrypt/live/chatapp.savan.tk/privkey.pem",
+  "utf8"
+);
+const certificate = fs.readFileSync(
+  "/etc/letsencrypt/live/chatapp.savan.tk/cert.pem",
+  "utf8"
+);
+const ca = fs.readFileSync(
+  "/etc/letsencrypt/live/chatapp.savan.tk/chain.pem",
+  "utf8"
+);
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca,
+};
+
+const httpsServer = https
+  .createServer(credentials, app)
+  .listen(
+    PORT,
+    console.log(`https Server running on PORT ${PORT}...`.yellow.bold)
+  );
 
 app.use(express.json()); // to accept json data
 
@@ -45,7 +72,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT;
 
-const server = app.listen(
+const server = httpsServer.listen(
   PORT,
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)
 );
