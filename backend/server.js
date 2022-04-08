@@ -76,7 +76,7 @@ const server = httpsServer.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://chatapp.savan.tk:5000",
+    origin: "http://chatapp.savan.tk",
     // credentials: true,
   },
 });
